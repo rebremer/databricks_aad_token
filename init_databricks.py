@@ -166,5 +166,5 @@ if __name__ == "__main__":
     upload_notebook(dbricks_auth)
     # 3. Run notebook
     # See https://github.com/rebremer/devopsai_databricks/blob/master/project/services/20_buildModelDatabricks.py
-    time.sleep(300) # take some time before AAD an
+    time.sleep(300) # take some time before AAD and Databricks are synced such that it is allowed to create cluster
     run_notebook(dbricks_auth)
