@@ -167,6 +167,7 @@ if __name__ == "__main__":
     # 0. Deploy new Databricks workspace
     create_databricks_workspace()
     # 1. Get bearer token to authenticate to DataBricks (without PAT token)
+    # To prevent that token expires, a new token is created for every call to Databricks
     #dbricks_auth = get_aad_token_dbr()
     # 2. Upload notebook to databricks
     upload_notebook()
