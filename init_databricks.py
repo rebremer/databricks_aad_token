@@ -166,5 +166,5 @@ if __name__ == "__main__":
     upload_notebook(dbricks_auth)
     # 3. Run notebook
     # See https://github.com/rebremer/devopsai_databricks/blob/master/project/services/20_buildModelDatabricks.py
-    # Make sure that PAT tokes is changed by AAD token in example above
-    #run_notebook(dbricks_auth)
+    time.sleep(300) # take some time before AAD an
+    run_notebook(dbricks_auth)
