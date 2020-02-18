@@ -10,6 +10,7 @@ import time
 resource_group = "<<your databricks resource group>>"
 databricks_workspace = "<<your databricks workspace>>"
 dbricks_location = "<<Azure location>>"
+dbricks_location = "westeurope"
 notebook = "testnotebook.py"
 notebookRemote = "/testnotebook"
 dbricks_api = f"https://{dbricks_location}.azuredatabricks.net/api/2.0"
@@ -49,7 +50,9 @@ def get_aad_token_dbr():
 
     return dbricks_auth
 
-def upload_notebook(dbricks_auth):
+def upload_notebook():
+
+    dbricks_auth = get_aad_token_dbr()
     # Upload notebook to Databricks
     print("Upload notebook to Databricks workspace")
     with open("modelling/" + notebook) as f:
@@ -80,9 +83,10 @@ def upload_notebook(dbricks_auth):
     else:
         print("Copy succesfull")
 
-def run_notebook(dbricks_auth):
+def run_notebook():
     # Based on https://github.com/rebremer/devopsai_databricks/tree/master/project/services
 
+    dbricks_auth = get_aad_token_dbr()
     response = requests.post(f"{dbricks_api}/jobs/create",
         headers= dbricks_auth,
         json={
@@ -111,6 +115,7 @@ def run_notebook(dbricks_auth):
     #
     # Step 3: Start job
     #
+    dbricks_auth = get_aad_token_dbr()
     databricks_job_id = response.json()['job_id']
     response = requests.post(f"{dbricks_api}/jobs/run-now",
         headers= dbricks_auth,
@@ -132,6 +137,7 @@ def run_notebook(dbricks_auth):
     scriptRun = 1
     count = 0
     while scriptRun == 1:
+        dbricks_auth = get_aad_token_dbr()
         response = requests.get(
             f"{dbricks_api}/jobs/runs/get?run_id={databricks_run_id}",
             headers= dbricks_auth
@@ -161,10 +167,10 @@ if __name__ == "__main__":
     # 0. Deploy new Databricks workspace
     create_databricks_workspace()
     # 1. Get bearer token to authenticate to DataBricks (without PAT token)
-    dbricks_auth = get_aad_token_dbr()
+    #dbricks_auth = get_aad_token_dbr()
     # 2. Upload notebook to databricks
-    upload_notebook(dbricks_auth)
+    upload_notebook()
     # 3. Run notebook
     # See https://github.com/rebremer/devopsai_databricks/blob/master/project/services/20_buildModelDatabricks.py
-    time.sleep(300) # take some time before AAD and Databricks are synced such that it is allowed to create cluster
-    run_notebook(dbricks_auth)
+    time.sleep(300)
+    run_notebook()
