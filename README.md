@@ -1,8 +1,8 @@
 # databricks_aad_token
-Fully automated Databricks python scripts that does the following:
+Fully automated Databricks python scripts that functionally does the following:
 
 - Create Databricks Workspace
-- Add SPN to Databricks Workspace with cluster creation rights (SPN does not need admin rights nor it has contributor rights on Databricks workspace control plane)
+- Add Service Principal (SPN) to Databricks Workspace with cluster creation rights (SPN does not need admin rights nor does it have contributor rights on Databricks Workspace control plane)
 - Copy notebook to SPN private workspace in Databricks and run notebook on cluster
 - Delete SPN from Databricks workspace
 
