@@ -206,7 +206,7 @@ def add_spn(dbr_tmp_pat):
                 "urn:ietf:params:scim:schemas:core:2.0:ServicePrincipal"
             ],
             "applicationId":f"{client_id}",
-            "displayName": "test-sp-caf",
+            "displayName": f"test-sp-{client_id}",
             "entitlements": [{ "value":"allow-cluster-create" }]
         }
     )
@@ -246,9 +246,7 @@ def delete_spn(dbr_tmp_pat, spn_id):
 if __name__ == "__main__":
 
     # 1. get admin credentials, subscription and tenant
-    credentials, subscription_id = get_azure_cli_credentials()
-    tenant_id = get_default_cli().invoke(['account', 'show', '--query', 'tenantId', '-o', 'tsv'])
-    
+    credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
     # 2.1 Deploy new Databricks workspace
     create_databricks_workspace()
     # 2.2 Wait 5 minutes, since it takes some time before Workspace is initialized
