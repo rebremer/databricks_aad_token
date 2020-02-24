@@ -1,4 +1,4 @@
-# databricks_aad_token
+# Databricks client using Service Principals
 Fully automated Databricks client script in Python that does the following:
 
 - Create Databricks Workspace
