@@ -234,6 +234,8 @@ def get_spns(dbricks_auth, spn_id):
 
 def check_spn_exists(dbricks_auth):
     spn_list = get_spns(dbricks_auth, "")
+    if "Resources" not in spn_list:
+        return ""
     for resource in spn_list["Resources"]:
         if resource["applicationId"] == client_id:
             print(f"client_id {client_id} already exists")
