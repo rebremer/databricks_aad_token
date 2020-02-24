@@ -30,23 +30,6 @@ def create_databricks_workspace():
     response = get_default_cli().invoke(['group', 'deployment', 'create', '-g', resource_group, '--template-file', 'arm/azuredeploy.json'])
     print(response)
 
-def get_dbr_auth(adb_token, az_token):
-
-    # From Alexandre Gattiker, see https://cloudarchitected.com/2020/01/using-azure-ad-with-the-azure-databricks-api/
-    dbricks_auth = {
-        "Authorization": f"Bearer {adb_token}",
-        "X-Databricks-Azure-SP-Management-Token": az_token,
-        "X-Databricks-Azure-Workspace-Resource-Id": (
-            f"/subscriptions/{subscription_id}"
-            f"/resourceGroups/{resource_group}"
-            f"/providers/Microsoft.Databricks"
-            f"/workspaces/{databricks_workspace}"
-        )
-    }
-
-    return dbricks_auth
-
-
 def get_admin_token(credentials, resource):
 
     token =  credentials.get_token(resource).token
@@ -75,14 +58,21 @@ def get_spn_token(tenant_id, resource):
     # todo, remove clumsiness, no time
     return json.loads(response.content.decode("utf-8"))['access_token']
 
-def create_tmp_dbrpat(dbricks_auth):
+def get_dbr_auth(adb_token, az_token):
 
-    response = requests.post(f"{dbricks_api}/token/create",
-        headers= dbricks_auth,
-        json={"lifetime_seconds": 100, "comment": "this is a temp token"}
-    )
+    # From Alexandre Gattiker, see https://cloudarchitected.com/2020/01/using-azure-ad-with-the-azure-databricks-api/
+    dbricks_auth = {
+        "Authorization": f"Bearer {adb_token}",
+        "X-Databricks-Azure-SP-Management-Token": az_token,
+        "X-Databricks-Azure-Workspace-Resource-Id": (
+            f"/subscriptions/{subscription_id}"
+            f"/resourceGroups/{resource_group}"
+            f"/providers/Microsoft.Databricks"
+            f"/workspaces/{databricks_workspace}"
+        )
+    }
 
-    return response.json()["token_value"]
+    return dbricks_auth
 
 def upload_notebook(dbricks_auth):
 
@@ -220,6 +210,15 @@ def check_spn_exists(dbricks_auth):
             print(f"client_id {client_id} already exists")
             return resource["id"]
     return ""
+
+def create_tmp_dbrpat(dbricks_auth):
+
+    response = requests.post(f"{dbricks_api}/token/create",
+        headers= dbricks_auth,
+        json={"lifetime_seconds": 100, "comment": "this is a temp token"}
+    )
+
+    return response.json()["token_value"]
 
 def add_spn(dbr_tmp_pat):
 
