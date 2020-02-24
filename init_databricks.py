@@ -192,26 +192,6 @@ def run_notebook(dbricks_auth):
             count += 1
             time.sleep(30) # wait 30 seconds before next status update
 
-def add_spn(dbr_tmp_pat):
-
-    # Add SPN only works with PAT token
-    response = requests.post(f"{dbricks_api}/preview/scim/v2/ServicePrincipals", 
-        headers= {
-            "Content-Type": "application/scim+json",
-            "Authorization": "Bearer " + dbr_tmp_pat
-        }, 
-        json = {
-            "schemas":[
-                "urn:ietf:params:scim:schemas:core:2.0:ServicePrincipal"
-            ],
-            "applicationId":f"{client_id}",
-            "displayName": f"test-sp-{client_id}",
-            "entitlements": [{ "value":"allow-cluster-create" }]
-        }
-    )
-    print(response.json())
-    return (response.json()["id"])
-
 def get_spns(dbricks_auth, spn_id):
   
     # Using Databricks PAT
@@ -240,6 +220,26 @@ def check_spn_exists(dbricks_auth):
             print(f"client_id {client_id} already exists")
             return resource["id"]
     return ""
+
+def add_spn(dbr_tmp_pat):
+
+    # Add SPN only works with PAT token
+    response = requests.post(f"{dbricks_api}/preview/scim/v2/ServicePrincipals", 
+        headers= {
+            "Content-Type": "application/scim+json",
+            "Authorization": "Bearer " + dbr_tmp_pat
+        }, 
+        json = {
+            "schemas":[
+                "urn:ietf:params:scim:schemas:core:2.0:ServicePrincipal"
+            ],
+            "applicationId":f"{client_id}",
+            "displayName": f"test-sp-{client_id}",
+            "entitlements": [{ "value":"allow-cluster-create" }]
+        }
+    )
+    print(response.json())
+    return (response.json()["id"])
 
 def delete_spn(dbr_tmp_pat, spn_id):
 
@@ -277,10 +277,10 @@ if __name__ == "__main__":
     spn_adb_token = get_spn_token(tenant_id, "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d")   
     spn_az_token = get_spn_token(tenant_id, "https://management.core.windows.net/")
     dbricks_spn_auth = get_dbr_auth(spn_adb_token, spn_az_token)
-    # 6. Upload notebook using SPN auth to SPN workspace
+    # 5. Upload notebook using SPN auth to SPN workspace
     upload_notebook(dbricks_spn_auth)
-    # 7. Run notebook using SPN auth, see also https://github.com/rebremer/devopsai_databricks/blob/master/project/services/20_buildModelDatabricks.py
+    # 6. Run notebook using SPN auth, see also https://github.com/rebremer/devopsai_databricks/blob/master/project/services/20_buildModelDatabricks.py
     run_notebook(dbricks_spn_auth)
-    # 8. Delete SPN using PAT
+    # 7. Delete SPN using PAT
     delete_spn(dbr_tmp_pat, spn_dbr_id)
     get_spns(dbricks_admin_auth, spn_dbr_id)
