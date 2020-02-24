@@ -1,4 +1,4 @@
-# Databricks client using Service Principals
+# Databricks client script using Service Principals
 Fully automated Databricks client script in Python that does the following:
 
 - Create Databricks Workspace
