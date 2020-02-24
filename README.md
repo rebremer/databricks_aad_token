@@ -6,4 +6,4 @@ Fully automated Databricks client script in Python that does the following:
 - Copy notebook to SPN private workspace in Databricks and run notebook on cluster
 - Delete SPN from Databricks workspace
 
-Based on https://cloudarchitected.com/2020/01/using-azure-ad-with-the-azure-databricks-api/
+Based on https://cloudarchitected.com/2020/01/using-azure-ad-with-the-azure-databricks-api/ from Alexandre Gattiker
