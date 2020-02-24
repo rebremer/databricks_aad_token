@@ -215,7 +215,7 @@ def create_tmp_dbrpat(dbricks_auth):
 
     response = requests.post(f"{dbricks_api}/token/create",
         headers= dbricks_auth,
-        json={"lifetime_seconds": 100, "comment": "this is a temp token"}
+        json={"lifetime_seconds": 2100, "comment": "this is a temp token for 35 minutes"}
     )
 
     return response.json()["token_value"]
