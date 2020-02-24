@@ -13,7 +13,6 @@ databricks_workspace = "<<databricks workspace name>>"
 client_id="<<service principal application id>>" 
 client_secret="<<service principal secret>>"
 
-#databricks_workspace_id ="/subscriptions/513a7987-b0d9-4106-a24d-4b3f49136ea8/resourceGroups/blog-devaisec-rg/providers/Microsoft.Databricks/workspaces/blog-devaisec-dbr2"
 dbricks_location = "westeurope"
 notebook = "testnotebook.py"
 notebookRemote = "/testnotebook"
