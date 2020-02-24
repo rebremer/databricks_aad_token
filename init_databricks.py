@@ -230,6 +230,15 @@ def get_spns(dbricks_auth, spn_id):
     # This also works with AAD bearer
     response = requests.get(url, headers = dbricks_auth)
     print (json.dumps(response.json(), sort_keys=True, indent=4))
+    return response.json()
+
+def check_spn_exists(dbricks_auth):
+    spn_list = get_spns(dbricks_auth, "")
+    for resource in spn_list["Resources"]:
+        if resource["applicationId"] == client_id:
+            print(f"client_id {client_id} already exists")
+            return resource["id"]
+    return ""
 
 def delete_spn(dbr_tmp_pat, spn_id):
 
@@ -258,8 +267,10 @@ if __name__ == "__main__":
     # 4. Create tmp dbr pat token to authenticate create/delete SPN in SCIM interface (works only with PAT) 
     dbr_tmp_pat = create_tmp_dbrpat(dbricks_admin_auth)
     # 3. Add spn to Databricks and provide rights to SPN to run manage clusters
-    spn_dbr_id = add_spn(dbr_tmp_pat)
-    get_spns(dbricks_admin_auth, spn_dbr_id)
+    spn_dbr_id = check_spn_exists(dbricks_admin_auth)
+    if spn_dbr_id == "":
+        spn_dbr_id = add_spn(dbr_tmp_pat)
+    get_spns(dbricks_admin_auth, "")
     # 4. Get spn tokens to authenticate, spn is not admin
     # Get a token for the global Databricks application. This value is fixed and never changes.
     spn_adb_token = get_spn_token(tenant_id, "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d")   
