@@ -1,0 +1,22 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+variables:
+  # change 5 variables below with your own settings
+  azureServiceConnectionId: '<<your service connection name>>'
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@1
+  displayName: 'Azure CLI deploy_databricks.sh'
+  inputs:
+    azureSubscription: $(azureServiceConnectionId)
+    scriptType: bash
+    scriptPath: 'deploy_databricks.sh'
