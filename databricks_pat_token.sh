@@ -29,7 +29,7 @@ echo $DATABRICKS_TOKEN
 az keyvault create --name $akv --resource-group $rg --location $loc 
 az keyvault secret set -n pattoken --vault-name $akv --value $DATABRICKS_TOKEN
 cli_response=$(az keyvault secret show -n pattoken --vault-name $akv)
-$DBrKeyFromKV=$(jq .value -r <<< "$cli_response")
+DBrKeyFromKV=$(echo $cli_response | jq -r '.value')
 # Create cluster option 1: Use PAT token to create Cluster
 api_response=$(curl -v -X POST https://$loc.azuredatabricks.net/api/2.0/clusters/create \
   -H "Authorization: Bearer $DBrKeyFromKV" \
