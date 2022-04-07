@@ -1,5 +1,3 @@
 requests
-azure-common
-azure
-azure-cli-core
-azure-core
+azure-identity
+azure-mgmt-compute

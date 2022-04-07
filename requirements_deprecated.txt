@@ -1,0 +1,5 @@
+requests
+azure-common
+azure
+azure-cli-core
+azure-core
